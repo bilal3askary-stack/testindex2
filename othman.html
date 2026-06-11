@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تدبير قاعة الرياضة</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f2f5;color:#111;min-height:100vh;direction:rtl;text-align:right}
+.app{padding:1.5rem;max-width:1050px;margin:0 auto}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:1.25rem}
+.header h1{font-size:20px;font-weight:600;color:#111;display:flex;align-items:center;gap:9px}
+
+/* Buttons */
+.btn{background:#fff;border:1px solid #d5d5d5;border-radius:8px;padding:8px 15px;font-size:13px;cursor:pointer;color:#333;display:inline-flex;align-items:center;gap:5px;transition:background .15s}
+.btn:hover{background:#f0f0f0}
+.btn-primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.btn-primary:hover{background:#1558b0}
+.btn-danger{color:#c62828;border-color:#f5b5b5}
+.btn-danger:hover{background:#fff0f0}
+.btn-sm{padding:4px 10px;font-size:12px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:1.25rem;background:#e8eaed;padding:4px;border-radius:10px;width:fit-content}
+.tab{padding:7px 20px;font-size:13px;cursor:pointer;border-radius:7px;color:#666;border:none;background:transparent;font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.tab.active{background:#fff;color:#111;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+/* Cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-bottom:1rem}
+.trainee-card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:1rem;cursor:pointer;transition:box-shadow .15s,border-color .15s;text-align:center}
+.trainee-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.1);border-color:#1a73e8}
+.avatar{width:58px;height:58px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.card-name{font-size:13px;font-weight:600;color:#111;margin-bottom:3px}
+.card-sub{font-size:11px;color:#888}
+.badge{display:inline-block;font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500}
+.badge-success{background:#e6f4ea;color:#1e7e34}
+.badge-danger{background:#fce8e6;color:#c62828}
+.badge-info{background:#e8f0fe;color:#1a73e8}
+.badge-warning{background:#fff3cd;color:#856404}
+
+/* Toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap;background:#fff;padding:.75rem 1rem;border-radius:10px;border:1px solid #eee}
+
+/* Table */
+.table-wrap{background:#fff;border-radius:12px;border:1px solid #e8e8e8;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:#f8f9fa}
+th{padding:11px 13px;text-align:right;font-weight:600;color:#555;font-size:12px;border-bottom:1px solid #eee;white-space:nowrap}
+td{padding:10px 13px;border-bottom:1px solid #f0f0f0;color:#111;vertical-align:middle;text-align:right}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafbff}
+.td-avatar{display:flex;align-items:center;gap:9px}
+.mini-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;overflow:hidden}
+.mini-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal{background:#fff;border-radius:14px;padding:1.75rem;width:580px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+.modal h2{font-size:17px;font-weight:600;margin-bottom:1.25rem;color:#111;display:flex;align-items:center;gap:8px}
+.modal-close{float:left;cursor:pointer;font-size:22px;line-height:1;color:#aaa;background:none;border:none;margin-top:-2px}
+.modal-close:hover{color:#333}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-group{margin-bottom:12px}
+label{font-size:12px;color:#555;display:block;margin-bottom:5px;font-weight:500}
+input,select,textarea{width:100%;font-size:13px;padding:8px 10px;border:1px solid #d5d5d5;border-radius:8px;outline:none;background:#fff;color:#111;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:#1a73e8;box-shadow:0 0 0 2px rgba(26,115,232,.15)}
+textarea{resize:vertical;height:60px}
+
+/* Profil */
+.profile-header{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem}
+.profile-avatar{width:76px;height:76px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:600;overflow:hidden;position:relative;cursor:pointer}
+.profile-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.cam-overlay{position:absolute;inset:0;background:rgba(0,0,0,.32);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.profile-avatar:hover .cam-overlay{opacity:1}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.info-item{background:#f8f9fa;border-radius:10px;padding:10px 14px;border:1px solid #eee}
+.info-item.full-width{grid-column: span 2}
+.info-label{font-size:11px;color:#888;margin-bottom:3px;font-weight:500}
+.info-value{font-size:13px;font-weight:600;color:#111}
+
+/* Calendrier */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-title{font-size:14px;font-weight:600;color:#111}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day-label{font-size:10px;color:#888;text-align:center;padding:5px 0;font-weight:600}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:7px;cursor:pointer;color:#666;background:#f4f6f8;transition:all .12s;border:1px solid transparent;font-weight:500}
+.cal-day:hover{border-color:#bbb}
+.cal-day.empty{background:transparent;cursor:default;border:none}
+.cal-day.present{background:#e6f4ea;color:#1e7e34;border-color:#a8d5b0}
+.cal-day.absent{background:#fce8e6;color:#c62828;border-color:#f5b5b5}
+.cal-day.today{border-color:#1a73e8;border-width:2px}
+.cal-day.future{opacity:.3;cursor:default}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:.75rem}
+.stat-card{background:#f8f9fa;border-radius:10px;padding:10px;text-align:center;border:1px solid #eee}
+.stat-num{font-size:22px;font-weight:700;color:#111}
+.stat-lbl{font-size:11px;color:#888;margin-top:2px;font-weight:500}
+.separator{height:1px;background:#eee;margin:1.1rem 0}
+
+/* Poids */
+.poids-list{max-height:160px;overflow-y:auto;margin-bottom:.75rem}
+.poids-item{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-radius:8px;font-size:13px;border:1px solid #eee;margin-bottom:4px;background:#fff}
+.poids-val{font-weight:600;color:#111}
+.poids-date{font-size:11px;color:#888}
+.diff-plus{color:#c62828;font-size:12px;margin-right:5px}
+.diff-moins{color:#1e7e34;font-size:12px;margin-right:5px}
+.poids-form{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+
+/* Legend */
+.legend{margin-top:.75rem;font-size:12px;color:#888;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.leg-dot{width:13px;height:13px;border-radius:4px;display:inline-block;margin-left:4px;vertical-align:middle}
+
+.empty-state{text-align:center;padding:3rem;color:#aaa;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <h1><i class="ti ti-barbell" style="font-size:24px;color:#1a73e8"></i> إدارة قاعة الرياضة</h1>
+    <button class="btn btn-primary" onclick="ouvrirAjout()"><i class="ti ti-plus"></i> إضافة منخرط جديد</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-cartes" onclick="changerTab('cartes')">
+      <i class="ti ti-layout-grid" style="font-size:15px"></i> المنخرطون
+    </button>
+    <button class="tab" id="tab-tableau" onclick="changerTab('tableau')">
+      <i class="ti ti-table" style="font-size:15px"></i> الجدول العام
+    </button>
+  </div>
+
+  <div id="vue-cartes">
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="🔍 ابحث عن منخرط..." style="max-width:220px" oninput="afficherCartes()">
+      <select id="filter" style="max-width:170px" onchange="afficherCartes()">
+        <option value="">جميع المنخرطين</option>
+        <option value="actif">نشط (الحضور ≥ 50%)</option>
+        <option value="inactif">غير نشط (الحضور < 50%)</option>
+      </select>
+    </div>
+    <div class="grid" id="cards-grid"></div>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <i class="ti ti-users" style="font-size:48px;display:block;margin-bottom:12px;opacity:.3"></i>
+      لا يوجد أي منخرط حالياً.<br>اضغط على <strong>إضافة منخرط جديد</strong> للبدء.
+    </div>
+  </div>
+
+  <div id="vue-tableau" style="display:none">
+    <div class="toolbar">
+      <input type="text" id="search2" placeholder="🔍 بحث سريع..." style="max-width:220px" oninput="afficherTableau()">
+      <select id="sort-col" style="max-width:190px" onchange="afficherTableau()">
+        <option value="nom">ترتيب حسب الاسم</option>
+        <option value="poids">ترتيب حسب الوزن الحالي</option>
+        <option value="taux">ترتيب حسب نسبة الحضور</option>
+        <option value="abonnement">ترتيب حسب الاشتراك</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>المنخرط</th>
+            <th>الهاتف</th>
+            <th>الاشتراك</th>
+            <th>الهدف</th>
+            <th>الطول</th>
+            <th>الوزن الحالي</th>
+            <th>الوزن الأولي</th>
+            <th>التطور</th>
+            <th>الحالة الصحية</th>
+            <th>حضور الشهر</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modal-overlay" style="display:none" onclick="clicExterieur(event)">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+const COULEURS=[
+  ['#dbeafe','#1e40af'],['#dcfce7','#166534'],['#fef3c7','#92400e'],
+  ['#fce7f3','#9d174d'],['#ede9fe','#4c1d95'],['#ccfbf1','#134e4a']
+];
+const MOIS=['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليو','غشت','شتنبر','أكتوبر','نونبر','دجنبر'];
+const JOURS=['أحد','إثن','ثلا','أرب','خميس','جمع','سبت'];
+const PLANS=['شهري','3 أشهر','6 أشهر','سنوي'];
+const OBJECTIFS=['زيادة الكتلة العضلية','إنقاص الوزن','رفع اللياقة البدنية','شكل عام','إعادة تأهيل','كارديو'];
+
+let adherents = JSON.parse(localStorage.getItem('gym_v3') || '[]');
+if (!adherents.length) {
+  adherents = [
+    {id:1,nom:'أحمد بنعلي',telephone:'0661234567',abonnement:'شهري',objectif:'زيادة الكتلة العضلية',taille:178,maladie:'لا توجد أمراض الحمد لله',dateInscription:'2026-01-01',photo:'',presences:{},poids:[{date:'2026-01-01',val:75},{date:'2026-03-01',val:78},{date:'2026-06-01',val:80}],couleurIdx:0},
+    {id:2,nom:'سارة خليل',telephone:'0678901234',abonnement:'3 أشهر',objectif:'إنقاص الوزن',taille:165,maladie:'حساسية ضد الغبار',dateInscription:'2026-02-15',photo:'',presences:{},poids:[{date:'2026-02-15',val:68},{date:'2026-05-15',val:65}],couleurIdx:1}
+  ];
+  sauvegarder();
+}
+let nextId = Math.max(0, ...adherents.map(a => a.id)) + 1;
+let adherentActuelId = null;
+let calMois = new Date().getMonth();
+let calAnnee = new Date().getFullYear();
+
+function sauvegarder() { localStorage.setItem('gym_v3', JSON.stringify(adherents)); }
+function initiales(nom) { return nom.split(' ').map(w => w[0]).join('').slice(0, 2); }
+function formaterDate(d) { if (!d) return '—'; const [a,m,j] = d.split('-'); return `${j}/${m}/${a}`; }
+function poidsActuel(a) { return a.poids && a.poids.length ? a.poids[a.poids.length-1].val : null; }
+function poidsInitial(a) { return a.poids && a.poids.length ? a.poids[0].val : null; }
+function tauxPresence(a) {
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const jours = Object.entries(a.presences || {}).filter(([k]) => k.startsWith(ym));
+  const p = jours.filter(([,v]) => v === 'present').length;
+  return jours.length ? Math.round(p / jours.length * 100) : null;
+}
+
+function changerTab(t) {
+  document.getElementById('vue-cartes').style.display = t === 'cartes' ? '' : 'none';
+  document.getElementById('vue-tableau').style.display = t === 'tableau' ? '' : 'none';
+  document.getElementById('tab-cartes').className = 'tab' + (t === 'cartes' ? ' active' : '');
+  document.getElementById('tab-tableau').className = 'tab' + (t === 'tableau' ? ' active' : '');
+  if (t === 'tableau') afficherTableau();
+}
+
+function afficherCartes() {
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const f = document.getElementById('filter').value;
+  const grid = document.getElementById('cards-grid');
+  const vide = document.getElementById('empty-state');
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+  let liste = adherents.filter(a => {
+    if (q && !a.nom.toLowerCase().includes(q)) return false;
+    const jours = Object.entries(a.presences || {}).filter(([k]) => k.startsWith(ym));
+    const p = jours.filter(([,v]) => v === 'present').length;
+    const taux = jours.length ? p / jours.length : 1;
+    if (f === 'actif' && taux < 0.5) return false;
+    if (f === 'inactif' && taux >= 0.5) return false;
+    return true;
+  });
+
+  grid.innerHTML = liste.map(a => {
+    const jours = Object.entries(a.presences || {}).filter(([k]) => k.startsWith(ym));
+    const presents = jours.filter(([,v]) => v === 'present').length;
+    const absents  = jours.filter(([,v]) => v === 'absent').length;
+    const pA = poidsActuel(a);
+    const [bg, fg] = COULEURS[a.couleurIdx % COULEURS.length];
+    const av = a.photo ? `<img src="${a.photo}" alt="">` : `<span style="color:${fg}">${initiales(a.nom)}</span>`;
+    return `<div class="trainee-card" onclick="ouvrirProfil(${a.id})">
+      <div class="avatar" style="background:${bg}">${av}</div>
+      <div class="card-name">${a.nom}</div>
+      <div class="card-sub">${a.abonnement}</div>
+      ${pA ? `<div style="font-size:12px;color:#888;margin-top:5px"><i class="ti ti-weight" style="font-size:12px"></i> ${pA} كغ</div>` : ''}
+      ${a.taille ? `<div style="font-size:11px;color:#aa9988;margin-top:2px"><i class="ti ti-ruler-2" style="font-size:11px"></i> ${a.taille} سم</div>` : ''}
+      <div style="display:flex;gap:4px;justify-content:center;margin-top:7px;flex-wrap:wrap">
+        <span class="badge badge-success"><i class="ti ti-check" style="font-size:10px"></i> حضر: ${presents}</span>
+        <span class="badge badge-danger"><i class="ti ti-x" style="font-size:10px"></i> غاب: ${absents}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  vide.style.display = liste.length ? 'none' : 'block';
+  grid.style.display = liste.length ? '' : 'none';
+}
+
+function afficherTableau() {
+  const q = (document.getElementById('search2').value || '').toLowerCase();
+  const tri = document.getElementById('sort-col').value;
+  let liste = [...adherents].filter(a => !q || a.nom.toLowerCase().includes(q));
+  liste.sort((a, b) => {
+    if (tri === 'nom')        return a.nom.localeCompare(b.nom);
+    if (tri === 'poids')      return (poidsActuel(b)||0) - (poidsActuel(a)||0);
+    if (tri === 'taux')       return (tauxPresence(b)||0) - (tauxPresence(a)||0);
+    if (tri === 'abonnement') return a.abonnement.localeCompare(b.abonnement);
+    return 0;
+  });
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+  document.getElementById('table-body').innerHTML = liste.map(a => {
+    const [bg, fg] = COULEURS[a.couleurIdx % COULEURS.length];
+    const av = a.photo ? `<img src="${a.photo}" alt="">` : `<span style="color:${fg}">${initiales(a.nom)}</span>`;
+    const pA = poidsActuel(a), pI = poidsInitial(a);
+    const diff = pA && pI ? +(pA - pI).toFixed(1) : null;
+    const diffHtml = diff === null ? '—'
+      : diff > 0 ? `<span class="diff-plus">+${diff} كغ ▲</span>`
+      : diff < 0 ? `<span class="diff-moins">${diff} كغ ▼</span>`
+      : `<span style="color:#888;font-size:12px">مستقر</span>`;
+    const jours = Object.entries(a.presences || {}).filter(([k]) => k.startsWith(ym));
+    const p  = jours.filter(([,v]) => v === 'present').length;
+    const ab = jours.filter(([,v]) => v === 'absent').length;
+    const taux = jours.length ? Math.round(p / jours.length * 100) : null;
+    const tauxHtml = taux === null ? '—'
+      : `<span class="badge ${taux >= 50 ? 'badge-success' : 'badge-danger'}">${taux}%</span>
+         <span style="font-size:11px;color:#888;margin-right:4px">${p} حضور / ${ab} غياب</span>`;
+    
+    return `<tr>
+      <td><div class="td-avatar">
+        <div class="mini-avatar" style="background:${bg}">${av}</div>
+        <span style="font-weight:600;cursor:pointer;color:#1a73e8" onclick="ouvrirProfil(${a.id})">${a.nom}</span>
+      </div></td>
+      <td>${a.telephone || '—'}</td>
+      <td><span class="badge badge-info">${a.abonnement}</span></td>
+      <td style="color:#666;font-size:12px">${a.objectif}</td>
+      <td>${a.taille ? a.taille + ' سم' : '—'}</td>
+      <td><strong>${pA ? pA + ' كغ' : '—'}</strong></td>
+      <td style="color:#888">${pI ? pI + ' كغ' : '—'}</td>
+      <td>${diffHtml}</td>
+      <td><span style="font-size:11px; max-width:120px; display:inline-block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${a.maladie || 'لا يوجد'}">${a.maladie || '—'}</span></td>
+      <td>${tauxHtml}</td>
+      <td><button class="btn btn-sm" onclick="ouvrirProfil(${a.id})"><i class="ti ti-eye" style="font-size:13px"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── AJOUT ──────────────────────────────────────────────
+function ouvrirAjout() {
+  afficherModal(`
+    <button class="modal-close" onclick="fermerModal()"><i class="ti ti-x"></i></button>
+    <h2><i class="ti ti-user-plus" style="color:#1a73e8"></i> منخرط جديد</h2>
+    <div class="form-row">
+      <div class="form-group"><label>الاسم الكامل *</label><input id="f-nom" placeholder="مثال: أحمد بنعلي"></div>
+      <div class="form-group"><label>رقم الهاتف</label><input id="f-tel" placeholder="06XXXXXXXX"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>نوع الاشتراك</label>
+        <select id="f-abo">${PLANS.map(p=>`<option>${p}</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><label>الهدف الرئيسي</label>
+        <select id="f-obj">${OBJECTIFS.map(o=>`<option>${o}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>تاريخ التسجيل</label>
+        <input type="date" id="f-date" value="${new Date().toISOString().slice(0,10)}">
+      </div>
+      <div class="form-group"><label>الوزن الأولي (كغ)</label>
+        <input type="number" id="f-poids" placeholder="مثال: 75" min="30" max="300" step="0.1">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>الطول (سم)</label>
+        <input type="number" id="f-taille" placeholder="مثال: 175" min="50" max="250">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>الحالة الصحية / الأمراض (إن وجدت)</label>
+      <textarea id="f-maladie" placeholder="اكتب هنا أي مشاكل صحية، إصابات سابقة أو أمراض مزمنة يجب الانتباه إليها..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem">
+      <button class="btn btn-primary" onclick="ajouterAdherent()"><i class="ti ti-check"></i> حفظ البيانات</button>
+      <button class="btn" onclick="fermerModal()">إلغاء</button>
+    </div>
+  `);
+}
+
+function ajouterAdherent() {
+  const nom = document.getElementById('f-nom').value.trim();
+  if (!nom) { document.getElementById('f-nom').style.borderColor = '#c62828'; return; }
+  const poids = parseFloat(document.getElementById('f-poids').value);
+  const taille = parseInt(document.getElementById('f-taille').value);
+  const date  = document.getElementById('f-date').value;
+  adherents.push({
+    id: nextId++, nom,
+    telephone: document.getElementById('f-tel').value,
+    abonnement: document.getElementById('f-abo').value,
+    objectif: document.getElementById('f-obj').value,
+    taille: (taille && !isNaN(taille)) ? taille : null,
+    maladie: document.getElementById('f-maladie').value.trim(),
+    dateInscription: date, photo: '', presences: {},
+    poids: (poids && !isNaN(poids)) ? [{date, val: poids}] : [],
+    couleurIdx: adherents.length % COULEURS.length
+  });
+  sauvegarder(); fermerModal(); afficherCartes();
+}
+
+// ── PROFIL ─────────────────────────────────────────────
+function ouvrirProfil(id) {
+  adherentActuelId = id;
+  calMois = new Date().getMonth(); calAnnee = new Date().getFullYear();
+  afficherProfil();
+}
+
+function afficherProfil() {
+  const a = adherents.find(x => x.id === adherentActuelId); if (!a) return;
+  const [bg, fg] = COULEURS[a.couleurIdx % COULEURS.length];
+  const av = a.photo ? `<img src="${a.photo}" alt="">` : `<span style="color:${fg}">${initiales(a.nom)}</span>`;
+  const pA = poidsActuel(a), pI = poidsInitial(a);
+  const diff = pA && pI ? +(pA - pI).toFixed(1) : null;
+  const diffTxt = diff === null ? ''
+    : diff > 0 ? `<span class="diff-plus">(+${diff} كغ منذ البداية ▲)</span>`
+    : diff < 0 ? `<span class="diff-moins">(${diff} كغ منذ البداية ▼)</span>`
+    : `<span style="font-size:12px;color:#888">(الوزن مستقر)</span>`;
+
+  const poidsHtml = (a.poids || []).slice().reverse().map((p, i, arr) => {
+    const prev = arr[i + 1];
+    const d = prev ? +(p.val - prev.val).toFixed(1) : null;
+    const dTxt = d === null ? '' : d > 0
+      ? `<span class="diff-plus">+${d}</span>`
+      : `<span class="diff-moins">${d}</span>`;
+    const realIdx = a.poids.length - 1 - i;
+    return `<div class="poids-item">
+      <span class="poids-date">${formaterDate(p.date)}</span>
+      <span class="poids-val">${p.val} كغ ${dTxt}</span>
+      <button class="btn btn-sm btn-danger" onclick="supprimerPoids(${a.id},${realIdx})">
+        <i class="ti ti-trash" style="font-size:11px"></i>
+      </button>
+    </div>`;
+  }).join('');
+
+  afficherModal(`
+    <button class="modal-close" onclick="fermerModal()"><i class="ti ti-x"></i></button>
+    <div class="profile-header">
+      <div class="profile-avatar" style="background:${bg}" onclick="document.getElementById('photo-inp-${a.id}').click()">
+        ${av}
+        <div class="cam-overlay"><i class="ti ti-camera" style="color:#fff;font-size:20px"></i></div>
+        <input type="file" id="photo-inp-${a.id}" accept="image/*" style="display:none" onchange="uploaderPhoto(event,${a.id})">
+      </div>
+      <div style="flex:1">
+        <div style="font-size:19px;font-weight:700;color:#111;margin-bottom:3px">${a.nom}</div>
+        <div style="font-size:12px;color:#888;margin-bottom:9px">${a.objectif} · منخرط منذ ${formaterDate(a.dateInscription)}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge badge-info">${a.abonnement}</span>
+          <button class="btn btn-sm" onclick="modifierAdherent(${a.id})"><i class="ti ti-edit" style="font-size:12px"></i> تعديل البيانات</button>
+          <button class="btn btn-sm btn-danger" onclick="supprimerAdherent(${a.id})"><i class="ti ti-trash" style="font-size:12px"></i> حذف المنخرط</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-label"><i class="ti ti-phone" style="font-size:11px"></i> رقم الهاتف</div>
+        <div class="info-value">${a.telephone || '—'}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label"><i class="ti ti-calendar" style="font-size:11px"></i> تاريخ التسجيل</div>
+        <div class="info-value">${formaterDate(a.dateInscription)}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label"><i class="ti ti-ruler-2" style="font-size:11px"></i> الطول الحالي</div>
+        <div class="info-value">${a.taille ? a.taille + ' سم' : '—'}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label"><i class="ti ti-weight" style="font-size:11px"></i> الوزن الحالي والبدائي</div>
+        <div class="info-value">${pA ? pA + ' كغ' : '—'} <span style="font-size:11px;color:#777">(${pI ? pI+' كغ أولي':''})</span> ${diffTxt}</div>
+      </div>
+      <div class="info-item full-width">
+        <div class="info-label"><i class="ti ti-heart-handshake" style="font-size:11px"></i> الحالة الصحية والملحوظات المرضية</div>
+        <div class="info-value" style="color: #b2400e; font-weight:normal; font-size:12px;">${a.maladie || 'لا توجد أي مشاكل صحية مسجلة.'}</div>
+      </div>
+    </div>
+
+    <div class="separator"></div>
+    <div style="font-size:13px;font-weight:600;color:#111;margin-bottom:9px">
+      <i class="ti ti-weight" style="font-size:15px;vertical-align:-2px;margin-left:5px;color:#1a73e8"></i> تتبع قياسات الوزن
+    </div>
+    <div class="poids-list">
+      ${poidsHtml || '<div style="text-align:center;padding:1rem;font-size:12px;color:#aaa">لم يتم تسجيل أي وزن بعد</div>'}
+    </div>
+    <div class="poids-form">
+      <div class="form-group" style="flex:1;min-width:100px;margin:0">
+        <label>الوزن الجديد (كغ)</label>
+        <input type="number" id="nouveau-poids" placeholder="مثال: 76.5" min="30" max="300" step="0.1">
+      </div>
+      <div class="form-group" style="flex:1;min-width:110px;margin:0">
+        <label>تاريخ القياس</label>
+        <input type="date" id="nouveau-poids-date" value="${new Date().toISOString().slice(0,10)}">
+      </div>
+      <button class="btn btn-primary" style="margin-top:18px;white-space:nowrap" onclick="ajouterPoids(${a.id})">
+        <i class="ti ti-plus"></i> إضافة قياس
+      </button>
+    </div>
+
+    <div class="separator"></div>
+    <div class="cal-header">
+      <button class="btn" style="padding:5px 12px" onclick="changerMois(-1)"><i class="ti ti-chevron-right"></i></button>
+      <div class="cal-title" id="cal-lbl"></div>
+      <button class="btn" style="padding:5px 12px" onclick="changerMois(1)"><i class="ti ti-chevron-left"></i></button>
+    </div>
+    <div class="cal-grid" id="cal"></div>
+    <div class="stats-row" id="stats"></div>
+    <div class="legend">
+      <span><span class="leg-dot" style="background:#e6f4ea;border:1px solid #a8d5b0"></span>حاضر</span>
+      <span><span class="leg-dot" style="background:#fce8e6;border:1px solid #f5b5b5"></span>غائب</span>
+      <span><span class="leg-dot" style="background:#f4f6f8;border:1px solid #ccc"></span>غير مسجل</span>
+      <span style="margin-right:auto;font-style:italic;font-size:11px">اضغط على يوم في التقويم لتغيير حالته</span>
+    </div>
+  `);
+  afficherCalendrier();
+}
+
+function ajouterPoids(id) {
+  const a = adherents.find(x => x.id === id); if (!a) return;
+  const val  = parseFloat(document.getElementById('nouveau-poids').value);
+  const date = document.getElementById('nouveau-poids-date').value;
+  if (!val || isNaN(val) || val < 30 || val > 300) return;
+  if (!a.poids) a.poids = [];
+  a.poids.push({ date, val });
+  a.poids.sort((x, y) => x.date.localeCompare(y.date));
+  sauvegarder(); afficherCartes(); afficherProfil();
+}
+
+function supprimerPoids(id, idx) {
+  const a = adherents.find(x => x.id === id); if (!a) return;
+  a.poids.splice(idx, 1);
+  sauvegarder(); afficherCartes(); afficherProfil();
+}
+
+function afficherCalendrier() {
+  const a = adherents.find(x => x.id === adherentActuelId); if (!a) return;
+  document.getElementById('cal-lbl').textContent = `${MOIS[calMois]} ${calAnnee}`;
+  const today   = new Date();
+  const premier = new Date(calAnnee, calMois, 1).getDay();
+  const nbJours = new Date(calAnnee, calMois + 1, 0).getDate();
+  const ym = `${calAnnee}-${String(calMois+1).padStart(2,'0')}`;
+
+  let html = JOURS.map(j => `<div class="cal-day-label">${j}</div>`).join('');
+  for (let i = 0; i < premier; i++) html += `<div class="cal-day empty"></div>`;
+  for (let d = 1; d <= nbJours; d++) {
+    const cle = `${ym}-${String(d).padStart(2,'0')}`;
+    const st  = a.presences[cle] || '';
+    const isT = d === today.getDate() && calMois === today.getMonth() && calAnnee === today.getFullYear();
+    const isF = new Date(calAnnee, calMois, d) > today;
+    const cls = ['cal-day',
+      st === 'present' ? 'present' : st === 'absent' ? 'absent' : '',
+      isT ? 'today' : '', isF ? 'future' : ''
+    ].filter(Boolean).join(' ');
+    html += `<div class="${cls}" onclick="${isF ? '' : `basculerJour('${cle}')`}" title="${cle}">${d}</div>`;
+  }
+  document.getElementById('cal').innerHTML = html;
+
+  const tous = Object.entries(a.presences).filter(([k]) => k.startsWith(ym));
+  const p  = tous.filter(([,v]) => v === 'present').length;
+  const ab = tous.filter(([,v]) => v === 'absent').length;
+  const total = p + ab;
+  const taux = total ? Math.round(p / total * 100) : 0;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="stat-num" style="color:#1e7e34">${p}</div><div class="stat-lbl">أيام الحضور</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#c62828">${ab}</div><div class="stat-lbl">أيام الغياب</div></div>
+    <div class="stat-card"><div class="stat-num">${taux}%</div><div class="stat-lbl">نسبة الحضور</div></div>
+  `;
+}
+
+function basculerJour(cle) {
+  const a = adherents.find(x => x.id === adherentActuelId); if (!a) return;
+  const cur = a.presences[cle] || '';
+  if (cur === '') a.presences[cle] = 'present';
+  else if (cur === 'present') a.presences[cle] = 'absent';
+  else delete a.presences[cle];
+  sauvegarder(); afficherCalendrier(); afficherCartes();
+}
+
+function changerMois(dir) {
+  calMois += dir;
+  if (calMois < 0)  { calMois = 11; calAnnee--; }
+  if (calMois > 11) { calMois = 0;  calAnnee++; }
+  afficherCalendrier();
+}
+
+function uploaderPhoto(e, id) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    const a = adherents.find(x => x.id === id);
+    if (a) { a.photo = ev.target.result; sauvegarder(); afficherCartes(); afficherProfil(); }
+  };
+  r.readAsDataURL(f);
+}
+
+// ── MODIFICATION ───────────────────────────────────────
+function modifierAdherent(id) {
+  const a = adherents.find(x => x.id === id); if (!a) return;
+  afficherModal(`
+    <button class="modal-close" onclick="ouvrirProfil(${id})"><i class="ti ti-x"></i></button>
+    <h2><i class="ti ti-edit" style="color:#1a73e8"></i> تعديل بيانات المنخرط</h2>
+    <div class="form-row">
+      <div class="form-group"><label>الاسم الكامل *</label><input id="e-nom" value="${a.nom}"></div>
+      <div class="form-group"><label>رقم الهاتف</label><input id="e-tel" value="${a.telephone || ''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>نوع الاشتراك</label>
+        <select id="e-abo">${PLANS.map(p=>`<option${p===a.abonnement?' selected':''}>${p}</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><label>الهدف الرئيسي</label>
+        <select id="e-obj">${OBJECTIFS.map(o=>`<option${o===a.objectif?' selected':''}>${o}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>الطول (سم)</label>
+        <input type="number" id="e-taille" value="${a.taille || ''}" placeholder="مثال: 175">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>الحالة الصحية / الأمراض</label>
+      <textarea id="e-maladie" placeholder="أي مشاكل صحية...">${a.maladie || ''}</textarea>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem">
+      <button class="btn btn-primary" onclick="sauvegarderModif(${id})"><i class="ti ti-check"></i> حفظ التعديلات</button>
+      <button class="btn" onclick="ouvrirProfil(${id})">إلغاء</button>
+    </div>
+  `);
+}
+
+function sauvegarderModif(id) {
+  const a = adherents.find(x => x.id === id); if (!a) return;
+  a.nom        = document.getElementById('e-nom').value.trim() || a.nom;
+  a.telephone  = document.getElementById('e-tel').value;
+  a.abonnement = document.getElementById('e-abo').value;
+  a.objectif   = document.getElementById('e-obj').value;
+  const t = parseInt(document.getElementById('e-taille').value);
+  a.taille     = (t && !isNaN(t)) ? t : null;
+  a.maladie    = document.getElementById('e-maladie').value.trim();
+  sauvegarder(); afficherCartes(); ouvrirProfil(id);
+}
+
+// ── SUPPRESSION ────────────────────────────────────────
+function supprimerAdherent(id) {
+  if (!confirm('هل أنت متأكد من حذف هذا المنخرط نهائياً من النظام؟')) return;
+  adherents = adherents.filter(x => x.id !== id);
+  sauvegarder(); fermerModal(); afficherCartes();
+}
+
+// ── MODAL ──────────────────────────────────────────────
+function afficherModal(html) {
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal-overlay').style.display = 'flex';
+}
+function fermerModal() {
+  document.getElementById('modal-overlay').style.display = 'none';
+}
+function clicExterieur(e) {
+  if (e.target === document.getElementById('modal-overlay')) fermerModal();
+}
+
+afficherCartes();
+</script>
+</body>
+</html>
